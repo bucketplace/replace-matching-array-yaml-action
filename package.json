@@ -1,0 +1,12 @@
+{
+  "name": "replace-matching-array-yaml-action",
+  "version": "0.1.0",
+  "description": "Replace array values that matching key in YAML",
+  "main": "index.js",
+  "author": "crong-devops <crong@bucketplace.net>",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "js-yaml": "^3.14.0"
+  }
+}
