@@ -1,0 +1,8 @@
+name: foo
+namespace: not-changed
+version: not-changed
+repository: not-changed
+image: not-changed
+image_tag: not-changed
+helm_path: not-changed
+git_sha: not-changed

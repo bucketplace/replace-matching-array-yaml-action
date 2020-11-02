@@ -21,6 +21,7 @@ fs.readFile(sourceFile, 'utf8', (error, data) => {
                     core.info('Target data is Array type');
 
                     for (var i in targetData) {
+                        targetData[i] = replaceMatchingData(matchingKey, targetData[i], sourceData);
                         if (targetData[i][matchingKey] !== undefined && targetData[i][matchingKey] === sourceData[matchingKey]) {
                             for (var keyName in sourceData) {
                                 if (keyName === matchingKey) {
@@ -34,14 +35,15 @@ fs.readFile(sourceFile, 'utf8', (error, data) => {
                             break;
                         }
                     }
-                    fs.writeFileSync(targetFile, yaml.dump(targetData));
-                    core.info('Rewrited target file');
                 } else if (typeof targetData == 'object' && targetData instanceof Object) {
                     core.info('Target data is Object type');
-                    throw new Error('Not support Object type');  // TO DO
+                    targetData = replaceMatchingData(matchingKey, targetData, sourceData);
                 } else {
                     throw new Error('Ivalid data type');
                 }
+
+                fs.writeFileSync(targetFile, yaml.dump(targetData));
+                core.info('Rewrited target file');
             } else {
                 throw new Error('Not found matching key in the source data');
             }
@@ -51,3 +53,17 @@ fs.readFile(sourceFile, 'utf8', (error, data) => {
     }
 });
 
+function replaceMatchingData(matchingKey, targetData, sourceData) {
+    if (targetData[matchingKey] !== undefined && targetData[matchingKey] === sourceData[matchingKey]) {
+        for (var keyName in sourceData) {
+            if (keyName === matchingKey) {
+                continue;
+            }
+            if (keyName in targetData) {
+                targetData[keyName] = sourceData[keyName];
+                core.debug(`Replace ${targetData[keyName]} -> ${sourceData[keyName]}`); 
+            }
+        }
+    }
+    return targetData;
+}

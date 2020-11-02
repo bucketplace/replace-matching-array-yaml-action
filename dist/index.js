@@ -2,11 +2,11 @@ module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 212:
+/***/ 614:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-const core = __webpack_require__(36);
-const yaml = __webpack_require__(94);
+const core = __webpack_require__(838);
+const yaml = __webpack_require__(167);
 
 const sourceFile = core.getInput('source-file');
 const targetFile = core.getInput('target-file');
@@ -28,6 +28,7 @@ fs.readFile(sourceFile, 'utf8', (error, data) => {
                     core.info('Target data is Array type');
 
                     for (var i in targetData) {
+                        targetData[i] = replaceMatchingData(matchingKey, targetData[i], sourceData);
                         if (targetData[i][matchingKey] !== undefined && targetData[i][matchingKey] === sourceData[matchingKey]) {
                             for (var keyName in sourceData) {
                                 if (keyName === matchingKey) {
@@ -41,14 +42,15 @@ fs.readFile(sourceFile, 'utf8', (error, data) => {
                             break;
                         }
                     }
-                    fs.writeFileSync(targetFile, yaml.dump(targetData));
-                    core.info('Rewrited target file');
                 } else if (typeof targetData == 'object' && targetData instanceof Object) {
                     core.info('Target data is Object type');
-                    // TO DO
+                    targetData = replaceMatchingData(matchingKey, targetData, sourceData);
                 } else {
                     throw new Error('Ivalid data type');
                 }
+
+                fs.writeFileSync(targetFile, yaml.dump(targetData));
+                core.info('Rewrited target file');
             } else {
                 throw new Error('Not found matching key in the source data');
             }
@@ -58,11 +60,25 @@ fs.readFile(sourceFile, 'utf8', (error, data) => {
     }
 });
 
+function replaceMatchingData(matchingKey, targetData, sourceData) {
+    if (targetData[matchingKey] !== undefined && targetData[matchingKey] === sourceData[matchingKey]) {
+        for (var keyName in sourceData) {
+            if (keyName === matchingKey) {
+                continue;
+            }
+            if (keyName in targetData) {
+                targetData[keyName] = sourceData[keyName];
+                core.debug(`Replace ${targetData[keyName]} -> ${sourceData[keyName]}`); 
+            }
+        }
+    }
+    return targetData;
+}
 
 
 /***/ }),
 
-/***/ 453:
+/***/ 829:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -76,7 +92,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const os = __importStar(__webpack_require__(87));
-const utils_1 = __webpack_require__(725);
+const utils_1 = __webpack_require__(583);
 /**
  * Commands
  *
@@ -148,7 +164,7 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 36:
+/***/ 838:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -170,9 +186,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const command_1 = __webpack_require__(453);
-const file_command_1 = __webpack_require__(630);
-const utils_1 = __webpack_require__(725);
+const command_1 = __webpack_require__(829);
+const file_command_1 = __webpack_require__(96);
+const utils_1 = __webpack_require__(583);
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 /**
@@ -393,7 +409,7 @@ exports.getState = getState;
 
 /***/ }),
 
-/***/ 630:
+/***/ 96:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -411,7 +427,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const fs = __importStar(__webpack_require__(747));
 const os = __importStar(__webpack_require__(87));
-const utils_1 = __webpack_require__(725);
+const utils_1 = __webpack_require__(583);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -429,7 +445,7 @@ exports.issueCommand = issueCommand;
 
 /***/ }),
 
-/***/ 725:
+/***/ 583:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -455,14 +471,14 @@ exports.toCommandValue = toCommandValue;
 
 /***/ }),
 
-/***/ 94:
+/***/ 167:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
 
-var yaml = __webpack_require__(60);
+var yaml = __webpack_require__(290);
 
 
 module.exports = yaml;
@@ -470,15 +486,15 @@ module.exports = yaml;
 
 /***/ }),
 
-/***/ 60:
+/***/ 290:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
 
-var loader = __webpack_require__(833);
-var dumper = __webpack_require__(457);
+var loader = __webpack_require__(595);
+var dumper = __webpack_require__(165);
 
 
 function deprecated(name) {
@@ -488,13 +504,13 @@ function deprecated(name) {
 }
 
 
-module.exports.Type = __webpack_require__(727);
-module.exports.Schema = __webpack_require__(439);
-module.exports.FAILSAFE_SCHEMA = __webpack_require__(178);
-module.exports.JSON_SCHEMA = __webpack_require__(878);
-module.exports.CORE_SCHEMA = __webpack_require__(718);
-module.exports.DEFAULT_SAFE_SCHEMA = __webpack_require__(140);
-module.exports.DEFAULT_FULL_SCHEMA = __webpack_require__(277);
+module.exports.Type = __webpack_require__(989);
+module.exports.Schema = __webpack_require__(248);
+module.exports.FAILSAFE_SCHEMA = __webpack_require__(45);
+module.exports.JSON_SCHEMA = __webpack_require__(924);
+module.exports.CORE_SCHEMA = __webpack_require__(72);
+module.exports.DEFAULT_SAFE_SCHEMA = __webpack_require__(62);
+module.exports.DEFAULT_FULL_SCHEMA = __webpack_require__(522);
 module.exports.load                = loader.load;
 module.exports.loadAll             = loader.loadAll;
 module.exports.safeLoad            = loader.safeLoad;
@@ -504,9 +520,9 @@ module.exports.safeDump            = dumper.safeDump;
 module.exports.YAMLException = __webpack_require__(957);
 
 // Deprecated schema names from JS-YAML 2.0.x
-module.exports.MINIMAL_SCHEMA = __webpack_require__(178);
-module.exports.SAFE_SCHEMA = __webpack_require__(140);
-module.exports.DEFAULT_SCHEMA = __webpack_require__(277);
+module.exports.MINIMAL_SCHEMA = __webpack_require__(45);
+module.exports.SAFE_SCHEMA = __webpack_require__(62);
+module.exports.DEFAULT_SCHEMA = __webpack_require__(522);
 
 // Deprecated functions from JS-YAML 1.x.x
 module.exports.scan           = deprecated('scan');
@@ -517,7 +533,7 @@ module.exports.addConstructor = deprecated('addConstructor');
 
 /***/ }),
 
-/***/ 311:
+/***/ 877:
 /***/ ((module) => {
 
 "use strict";
@@ -584,7 +600,7 @@ module.exports.extend         = extend;
 
 /***/ }),
 
-/***/ 457:
+/***/ 165:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -592,10 +608,10 @@ module.exports.extend         = extend;
 
 /*eslint-disable no-use-before-define*/
 
-var common              = __webpack_require__(311);
+var common              = __webpack_require__(877);
 var YAMLException       = __webpack_require__(957);
-var DEFAULT_FULL_SCHEMA = __webpack_require__(277);
-var DEFAULT_SAFE_SCHEMA = __webpack_require__(140);
+var DEFAULT_FULL_SCHEMA = __webpack_require__(522);
+var DEFAULT_SAFE_SCHEMA = __webpack_require__(62);
 
 var _toString       = Object.prototype.toString;
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -1493,7 +1509,7 @@ module.exports = YAMLException;
 
 /***/ }),
 
-/***/ 833:
+/***/ 595:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -1501,11 +1517,11 @@ module.exports = YAMLException;
 
 /*eslint-disable max-len,no-use-before-define*/
 
-var common              = __webpack_require__(311);
+var common              = __webpack_require__(877);
 var YAMLException       = __webpack_require__(957);
-var Mark                = __webpack_require__(893);
-var DEFAULT_SAFE_SCHEMA = __webpack_require__(140);
-var DEFAULT_FULL_SCHEMA = __webpack_require__(277);
+var Mark                = __webpack_require__(902);
+var DEFAULT_SAFE_SCHEMA = __webpack_require__(62);
+var DEFAULT_FULL_SCHEMA = __webpack_require__(522);
 
 
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -3145,14 +3161,14 @@ module.exports.safeLoad    = safeLoad;
 
 /***/ }),
 
-/***/ 893:
+/***/ 902:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
 
-var common = __webpack_require__(311);
+var common = __webpack_require__(877);
 
 
 function Mark(name, buffer, position, line, column) {
@@ -3229,7 +3245,7 @@ module.exports = Mark;
 
 /***/ }),
 
-/***/ 439:
+/***/ 248:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3237,9 +3253,9 @@ module.exports = Mark;
 
 /*eslint-disable max-len*/
 
-var common        = __webpack_require__(311);
+var common        = __webpack_require__(877);
 var YAMLException = __webpack_require__(957);
-var Type          = __webpack_require__(727);
+var Type          = __webpack_require__(989);
 
 
 function compileList(schema, name, result) {
@@ -3345,7 +3361,7 @@ module.exports = Schema;
 
 /***/ }),
 
-/***/ 718:
+/***/ 72:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3359,19 +3375,19 @@ module.exports = Schema;
 
 
 
-var Schema = __webpack_require__(439);
+var Schema = __webpack_require__(248);
 
 
 module.exports = new Schema({
   include: [
-    __webpack_require__(878)
+    __webpack_require__(924)
   ]
 });
 
 
 /***/ }),
 
-/***/ 277:
+/***/ 522:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3387,24 +3403,24 @@ module.exports = new Schema({
 
 
 
-var Schema = __webpack_require__(439);
+var Schema = __webpack_require__(248);
 
 
 module.exports = Schema.DEFAULT = new Schema({
   include: [
-    __webpack_require__(140)
+    __webpack_require__(62)
   ],
   explicit: [
-    __webpack_require__(745),
-    __webpack_require__(574),
-    __webpack_require__(128)
+    __webpack_require__(576),
+    __webpack_require__(860),
+    __webpack_require__(341)
   ]
 });
 
 
 /***/ }),
 
-/***/ 140:
+/***/ 62:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3418,29 +3434,29 @@ module.exports = Schema.DEFAULT = new Schema({
 
 
 
-var Schema = __webpack_require__(439);
+var Schema = __webpack_require__(248);
 
 
 module.exports = new Schema({
   include: [
-    __webpack_require__(718)
+    __webpack_require__(72)
   ],
   implicit: [
-    __webpack_require__(559),
-    __webpack_require__(580)
+    __webpack_require__(447),
+    __webpack_require__(973)
   ],
   explicit: [
-    __webpack_require__(390),
-    __webpack_require__(489),
-    __webpack_require__(568),
-    __webpack_require__(307)
+    __webpack_require__(597),
+    __webpack_require__(565),
+    __webpack_require__(7),
+    __webpack_require__(624)
   ]
 });
 
 
 /***/ }),
 
-/***/ 178:
+/***/ 45:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3451,21 +3467,21 @@ module.exports = new Schema({
 
 
 
-var Schema = __webpack_require__(439);
+var Schema = __webpack_require__(248);
 
 
 module.exports = new Schema({
   explicit: [
-    __webpack_require__(14),
-    __webpack_require__(395),
-    __webpack_require__(342)
+    __webpack_require__(390),
+    __webpack_require__(996),
+    __webpack_require__(909)
   ]
 });
 
 
 /***/ }),
 
-/***/ 878:
+/***/ 924:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3480,25 +3496,25 @@ module.exports = new Schema({
 
 
 
-var Schema = __webpack_require__(439);
+var Schema = __webpack_require__(248);
 
 
 module.exports = new Schema({
   include: [
-    __webpack_require__(178)
+    __webpack_require__(45)
   ],
   implicit: [
-    __webpack_require__(529),
-    __webpack_require__(93),
-    __webpack_require__(275),
-    __webpack_require__(471)
+    __webpack_require__(775),
+    __webpack_require__(897),
+    __webpack_require__(600),
+    __webpack_require__(677)
   ]
 });
 
 
 /***/ }),
 
-/***/ 727:
+/***/ 989:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3567,7 +3583,7 @@ module.exports = Type;
 
 /***/ }),
 
-/***/ 390:
+/***/ 597:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -3583,7 +3599,7 @@ try {
   NodeBuffer = _require('buffer').Buffer;
 } catch (__) {}
 
-var Type       = __webpack_require__(727);
+var Type       = __webpack_require__(989);
 
 
 // [ 64, 65, 66 ] -> [ padding, CR, LF ]
@@ -3713,13 +3729,13 @@ module.exports = new Type('tag:yaml.org,2002:binary', {
 
 /***/ }),
 
-/***/ 93:
+/***/ 897:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 function resolveYamlBoolean(data) {
   if (data === null) return false;
@@ -3756,14 +3772,14 @@ module.exports = new Type('tag:yaml.org,2002:bool', {
 
 /***/ }),
 
-/***/ 471:
+/***/ 677:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var common = __webpack_require__(311);
-var Type   = __webpack_require__(727);
+var common = __webpack_require__(877);
+var Type   = __webpack_require__(989);
 
 var YAML_FLOAT_PATTERN = new RegExp(
   // 2.5e4, 2.5 and integers
@@ -3880,14 +3896,14 @@ module.exports = new Type('tag:yaml.org,2002:float', {
 
 /***/ }),
 
-/***/ 275:
+/***/ 600:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var common = __webpack_require__(311);
-var Type   = __webpack_require__(727);
+var common = __webpack_require__(877);
+var Type   = __webpack_require__(989);
 
 function isHexCode(c) {
   return ((0x30/* 0 */ <= c) && (c <= 0x39/* 9 */)) ||
@@ -4061,7 +4077,7 @@ module.exports = new Type('tag:yaml.org,2002:int', {
 
 /***/ }),
 
-/***/ 128:
+/***/ 341:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -4086,7 +4102,7 @@ try {
   if (typeof window !== 'undefined') esprima = window.esprima;
 }
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 function resolveJavascriptFunction(data) {
   if (data === null) return false;
@@ -4162,13 +4178,13 @@ module.exports = new Type('tag:yaml.org,2002:js/function', {
 
 /***/ }),
 
-/***/ 574:
+/***/ 860:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 function resolveJavascriptRegExp(data) {
   if (data === null) return false;
@@ -4230,13 +4246,13 @@ module.exports = new Type('tag:yaml.org,2002:js/regexp', {
 
 /***/ }),
 
-/***/ 745:
+/***/ 576:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 function resolveJavascriptUndefined() {
   return true;
@@ -4266,13 +4282,13 @@ module.exports = new Type('tag:yaml.org,2002:js/undefined', {
 
 /***/ }),
 
-/***/ 342:
+/***/ 909:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 module.exports = new Type('tag:yaml.org,2002:map', {
   kind: 'mapping',
@@ -4282,13 +4298,13 @@ module.exports = new Type('tag:yaml.org,2002:map', {
 
 /***/ }),
 
-/***/ 580:
+/***/ 973:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 function resolveYamlMerge(data) {
   return data === '<<' || data === null;
@@ -4302,13 +4318,13 @@ module.exports = new Type('tag:yaml.org,2002:merge', {
 
 /***/ }),
 
-/***/ 529:
+/***/ 775:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 function resolveYamlNull(data) {
   if (data === null) return true;
@@ -4344,13 +4360,13 @@ module.exports = new Type('tag:yaml.org,2002:null', {
 
 /***/ }),
 
-/***/ 489:
+/***/ 565:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
 var _toString       = Object.prototype.toString;
@@ -4396,13 +4412,13 @@ module.exports = new Type('tag:yaml.org,2002:omap', {
 
 /***/ }),
 
-/***/ 568:
+/***/ 7:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 var _toString = Object.prototype.toString;
 
@@ -4457,13 +4473,13 @@ module.exports = new Type('tag:yaml.org,2002:pairs', {
 
 /***/ }),
 
-/***/ 395:
+/***/ 996:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 module.exports = new Type('tag:yaml.org,2002:seq', {
   kind: 'sequence',
@@ -4473,13 +4489,13 @@ module.exports = new Type('tag:yaml.org,2002:seq', {
 
 /***/ }),
 
-/***/ 307:
+/***/ 624:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -4510,13 +4526,13 @@ module.exports = new Type('tag:yaml.org,2002:set', {
 
 /***/ }),
 
-/***/ 14:
+/***/ 390:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 module.exports = new Type('tag:yaml.org,2002:str', {
   kind: 'scalar',
@@ -4526,13 +4542,13 @@ module.exports = new Type('tag:yaml.org,2002:str', {
 
 /***/ }),
 
-/***/ 559:
+/***/ 447:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
 
 
-var Type = __webpack_require__(727);
+var Type = __webpack_require__(989);
 
 var YAML_DATE_REGEXP = new RegExp(
   '^([0-9][0-9][0-9][0-9])'          + // [1] year
@@ -4684,6 +4700,6 @@ module.exports = require("path");
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(212);
+/******/ 	return __webpack_require__(614);
 /******/ })()
 ;
